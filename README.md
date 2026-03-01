@@ -4,9 +4,9 @@ Using a spare Pico as a [PicoProbe](https://www.raspberrypi.com/documentation/mi
 
 Typically with this setup you configure your application to send *stdout* to the UART on pins 1 and 2, which the PicoProbe then relays to the host via a USB serial device; but it's actually quite straightforward to send it directly over the SWD with no need for a separate connection.
 
-To send application output over SWD we can use [Segger RTT]((https://kb.segger.com/RTT)): an open real-time transfer interface supported by `pico/stdio`, PicoProbe and OpenOCD.  
+To send application output over SWD we can use [Segger RTT]((https://kb.segger.com/RTT)): an open real-time transfer interface supported by the C/C++ SDK, PicoProbe and OpenOCD.  
 
-During a debug session OpenOCD can exposes each RTT channel as a local TCP socket that we can view in VSCode or an external tool like `nc`.
+During a debug session OpenOCD exposes each RTT channel as a local TCP socket that we can view in a VSCode terminal or with an external tool like netcat `nc`.
 
 ## configuring RTT in the application
 
@@ -14,13 +14,12 @@ Simply include `pico_enable_stdio_rtt(test_stdio_rtt 1)` in your CMakeLists.txt,
 
 You can then just call `sdtio_init_all()`, `printf()` and so on as normal.
 
-Note that SWD will only work in a debug build.
+    Note that SWD will only work in a debug build.
 
 ## RTT in VSCode
 
-All you have to do to enable RTT is add a section to your launch configuration.
-
-Open `launch.json` in the `.vscode` folder and in the *"Pico Debug (Cortex-Debug)"* configuration, add:
+To enable RTT in a VSCode debug configuration you can add a section to the `launch.json` file in your project's `.vscode` folder.
+Put the following lines in the relevant configuration, normally *"Pico Debug (Cortex-Debug)"*:
 
     "rttConfig": {
         "enabled": true,
